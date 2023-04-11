@@ -1,15 +1,15 @@
 import { Router } from 'express';
-import ProductManager  from '../dao/productManager.js';
+import {getProductsForHandleController, getPorductsController, getProductsForPerfilController} from '../controllers/product.controller.js'
 import  MessageManager  from '../dao/messageManager.js';
 import { auth, isLogged, isAdmin } from '../middlewares/auth.middleware.js';
 
 
 const router = Router();
-const productManager= new ProductManager();
+
 const messageManager = new MessageManager();  
 
 router.get('/', async (req, res) => {
-    const products = await productManager.getProductsForHandle()
+    const products = await getProductsForHandleController()
     if (products) {
         res.render('index', {products})
         
@@ -17,7 +17,7 @@ router.get('/', async (req, res) => {
 });
 
 router.get ('/realtimeproducts',  async (req,res) => {
-    const products = await productManager.getProductsForHandle()
+    const products = getProductsForHandleController()
     res.render('realTimeProducts', {products})
 })
 
@@ -27,14 +27,7 @@ router.get ('/chat', async(req,res) => {
     res.render ('chat', newMessage)
 })
 
-router.get ('/products', async (req,res) => {
-    const {limit = 10, page = 1} = req.query;
-    const products= await productManager.getProductsForHandle(limit, page);
-    const listJson = JSON.parse(JSON.stringify(products.docs));
-    console.log(products);
-    res.render('products', {listJson, products})
-
-})
+router.get ('/products', getProductsForHandleController )
 
 router.get('/registro', isLogged, (req,res) => {
     res.render('registro')
@@ -48,12 +41,7 @@ router.get('/login', isLogged, (req,res) =>{
     res.render('login')
 })
 
-router.get('/perfil', auth, isAdmin, async (req,res) =>{
-    const {limit = 10, page = 1} = req.query;
-    const products= await productManager.getProducts(limit, page);
-    const listJson = JSON.parse(JSON.stringify(products.docs));
-    res.render('products', {email: req.session.email, role: req.session.role, listJson, products})
-})
+router.get('/perfil', auth, isAdmin, getProductsForPerfilController)
 
 router.get('/errorLogin', (req,res) =>{
     res.render('errorLogin');

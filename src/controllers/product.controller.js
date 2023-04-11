@@ -29,6 +29,29 @@ export async function getPorductsController (req,res) {
     }
 }
 
+export async function getProductsForPerfilController (req,res) {
+    try {
+        const {limit = 10, page = 1} = req.query;
+        const products= await getProductsService(limit, page);
+        const listJson = JSON.parse(JSON.stringify(products.docs));
+        return res.render('products', {email: req.session.email, role: req.session.role, listJson, products})
+    } catch (error) {
+        return res.status(500).json({error})
+    }
+}
+
+export async function getProductsForHandleController (req, res) {
+    try {
+        const {limit = 10, page = 1} = req.query;
+        const products= await getProductsForHandleService(limit, page);
+        const listJson = JSON.parse(JSON.stringify(products.docs));
+        res.render('products', {listJson, products})
+    } catch (error) {
+        return res.status(500).json({error})
+        
+    }
+}
+
 export async function getProductByIdController(req,res) {
     try {
         const {pId} = req.params;
@@ -79,7 +102,7 @@ export async function updateProductController (req,res) {
 export async function deleteProductController(req,res) {
     try {
         const {pId} = req.params;
-        const product = await getProductByIdController(pId);
+        const product = await getProductByIdService(pId);
         if (!true) {
             return res.status(400).json({status:'Error' , message: 'No product in Data Base'})            
         }

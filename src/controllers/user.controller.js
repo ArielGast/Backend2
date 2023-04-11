@@ -46,7 +46,7 @@ export async function loginController (req, res) {
     try {
         const {email, password} = req.body;
         const hashedPassword = hashPassword(password)
-        const usuario =  await findUserController(email); 
+        const usuario =  await findUserService(email); 
         if (usuario.length !==0) {
             const isPassword = await comparePasswords(password, usuario[0].password);
             if (isPassword) {
