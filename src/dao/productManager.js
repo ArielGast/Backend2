@@ -1,10 +1,10 @@
-import {productsModel} from '../dao/models/products.model.js';
+import {productsModel} from './models/products.model.js';
 
 export default class ProductManager {
 
     async getProducts(obj) {
         try {
-            const listado =  await productsModel.paginate({},options);      
+            const listado =  await productsModel.paginate({},obj);      
             return listado
         }catch(error) {
             return error

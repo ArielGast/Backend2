@@ -1,10 +1,10 @@
 import { findUserService, createUserService, findUserByIdService } from "../services/user.services.js";
 import config from '../config.js';
-import { hashPassword, comparePasswords } from '../utils/utils.js';
+import { hashPassword, comparePasswords } from '../utils.js';
 import passport from "passport";
 
 
-const ADMIN_EMAIL= config.ADMIN_EMAIL;
+const ADMIN_EMAIL= config.admin_email;
 
 export async function findUserController (email) {
     try {

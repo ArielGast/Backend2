@@ -3,7 +3,7 @@ import { Strategy as localStrategy } from "passport-local";
 import { Strategy as githubStrategy } from "passport-github2";
 import { Strategy as googleStrategy } from "passport-google-oauth20";
 import { findUserController, createUserController, findUserByIdController } from "../controllers/user.controller.js"; 
-import { hashPassword } from '../utils/utils.js';
+import { hashPassword } from '../utils.js';
 import config from '../config.js';
 
 

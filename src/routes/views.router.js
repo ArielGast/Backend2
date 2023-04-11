@@ -44,7 +44,7 @@ router.get('/errorRegistro', (req,res) =>{
     res.render('errorRegistro');
 })
 
-router.get('/login', isLogged,(req,res) =>{
+router.get('/login', isLogged, (req,res) =>{
     res.render('login')
 })
 
