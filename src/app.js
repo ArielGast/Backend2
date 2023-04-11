@@ -1,5 +1,5 @@
 import express from 'express';
-import {__dirname} from "./utils.js";
+import {__dirname} from './utils/utils.js';
 import handlebars from 'express-handlebars';
 import {Server} from 'socket.io';
 import session from 'express-session';
@@ -9,20 +9,20 @@ import productsRouter from './routes/products.router.js';
 import cartsRouter from './routes/carts.router.js';
 import usersRouter from './routes/users.router.js';
 import cookieParser from 'cookie-parser';
-import { ProductManager } from './dao/mongoManagers/productManager.js';
-import { MessageManager } from './dao/mongoManagers/messageManager.js';
-import './persistence/dbConfig.js';
+//import { ProductManager } from './dao/mongoManagers/productManager.js';
+//import { MessageManager } from './dao/mongoManagers/messageManager.js';
+import './dao/dbConfig.js';
 import MongoStore from 'connect-mongo';
 import passport from 'passport';
 import './passport/passportStrategies.js';
 import sessionsRouter from './routes/sessions.router.js';
+import config from './config.js';
 
 const fileStore = FileStore(session);
 
 const app = express();
-const PORT = 8080;
-const productManager = new ProductManager();
-const messageManager = new MessageManager();
+const PORT = config.port;
+
 
 
 //Session Mongo
@@ -30,7 +30,7 @@ app.use(cookieParser());
 app.use(
     session({
         store: new MongoStore({
-            mongoUrl: 'mongodb+srv://arielgast:pepe1234@cluster0.a5yoyot.mongodb.net/ecommerce?retryWrites=true&w=majority'
+            mongoUrl: config.uri   //'mongodb+srv://arielgast:pepe1234@cluster0.a5yoyot.mongodb.net/ecommerce?retryWrites=true&w=majority'
         }),
         resave:false,
         saveUninitialized: false,
