@@ -71,7 +71,6 @@ new googleStrategy({
     callbackURL: "http://localhost:8080/users/google"
   }, async (accessToken, refreshToken, profile, done) => {
     const usuario = await userController.findUserController(profile._json.email)
-    console.log(usuario);
         if(!usuario) {
             const newUser = {
                 first_name: profile._json.given_name,
