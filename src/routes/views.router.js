@@ -1,15 +1,14 @@
 import { Router } from 'express';
-import {getProductsForHandleController, getPorductsController, getProductsForPerfilController} from '../controllers/product.controller.js'
-import  MessageManager  from '../dao/messageManager.js';
+import productController from '../controllers/product.controller.js';
+import  messageMongo from '../persistencia/DAOs/messagesDAO/messageMongo.js';
 import { auth, isLogged, isAdmin } from '../middlewares/auth.middleware.js';
 
 
 const router = Router();
 
-const messageManager = new MessageManager();  
 
 router.get('/', async (req, res) => {
-    const products = await getProductsForHandleController()
+    const products = await productController.getProductsForHandleController()
     if (products) {
         res.render('index', {products})
         
@@ -17,17 +16,17 @@ router.get('/', async (req, res) => {
 });
 
 router.get ('/realtimeproducts',  async (req,res) => {
-    const products = getProductsForHandleController()
+    const products = productController.getProductsForHandleController()
     res.render('realTimeProducts', {products})
 })
 
 router.get ('/chat', async(req,res) => {
 
-    const newMessage = await messageManager.getMessages();
+    const newMessage = await messageMongo.getMessages();
     res.render ('chat', newMessage)
 })
 
-router.get ('/products', getProductsForHandleController )
+router.get ('/products', productController.getProductsForHandleController )
 
 router.get('/registro', isLogged, (req,res) => {
     res.render('registro')
@@ -41,7 +40,7 @@ router.get('/login', isLogged, (req,res) =>{
     res.render('login')
 })
 
-router.get('/perfil', auth, isAdmin, getProductsForPerfilController)
+router.get('/perfil', auth, isAdmin, productController.getProductsForPerfilController)
 
 router.get('/errorLogin', (req,res) =>{
     res.render('errorLogin');

@@ -1,30 +1,36 @@
-import UserManager from '../dao/userManager.js'
+import userMongo from "../persistencia/DAOs/usersDAO/usersMongo.js";
 
-const userManager = new UserManager();
+class UserService {
+    constructor() {
+        this.dao = userMongo;
+    }
+    async findUserService (email) {
+        try {
+            const user = await this.dao.findOne(email);
+            return user
+        } catch (error) {
+            return error;
+        }
+    }
+    
+    async createUserService (user) {
+        try {
+            const newUser = await this.dao.create(user);
+            return newUser;
+        } catch (error) {
+            return error;    
+        }
+    }
+    
+    async findUserByIdService(idU) {
+        try {
+            const user = await this.dao.findOne(idU);
+            return user;
+        } catch (error) {
+            return error;
+        }
 
-export async function findUserService (email) {
-    try {
-        const user = await userManager.findUser(email);
-        return user
-    } catch (error) {
-        return error;
     }
 }
-
-export async function createUserService (user) {
-    try {
-        const newUser = await userManager.createUser(user);
-        return newUser;
-    } catch (error) {
-        return error;    
-    }
-}
-
-export async function findUserByIdService(idU) {
-    try {
-        const user = await userManager.findUserById(idU);
-        return user;
-    } catch (error) {
-        return error;
-    }
-}
+ const userService = new UserService();
+ export default userService;

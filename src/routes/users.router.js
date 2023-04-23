@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { loginController, logoutController, githubController, googleController } from "../controllers/user.controller.js"; 
+import userController from '../controllers/user.controller.js';
 import passport from "passport";
 
 const router = Router();
@@ -14,13 +14,13 @@ router.post(
     })
 )
 
-router.post('/login', loginController);
-router.get('/logout', logoutController);
+router.post('/login', userController.loginController);
+router.get('/logout', userController.logoutController);
 router.get('/registroGithub',passport.authenticate('githubRegistro', {scope : ['user.email']}))
-router.get('/github', passport.authenticate('githubRegistro', {failureRedirect: '/views/errorRegistro'}), githubController);
+router.get('/github', passport.authenticate('githubRegistro', {failureRedirect: '/views/errorRegistro'}), userController.githubController);
 
 // Google
 router.get('/registroGoogle', passport.authenticate('google',{scope:['profile', 'email']}));
-router.get('/google', passport.authenticate('google', {scope:['email']}), googleController);
+router.get('/google', passport.authenticate('google', {scope:['email']}), userController.googleController);
 
 export default router;

@@ -2,7 +2,7 @@ import passport from "passport";
 import { Strategy as localStrategy } from "passport-local";
 import { Strategy as githubStrategy } from "passport-github2";
 import { Strategy as googleStrategy } from "passport-google-oauth20";
-import { findUserController, createUserController, findUserByIdController } from "../controllers/user.controller.js"; 
+import userController from '../controllers/user.controller.js';
 import { hashPassword } from '../utils.js';
 import config from '../config.js';
 
@@ -22,13 +22,13 @@ passport.use(
         passReqToCallback: true,
     },
     async (req, email, password, done) => {
-        const usuario = await findUserController(email);
+        const usuario = await userController.findUserController(email);
         if (usuario.length !== 0) {
             return done(null, false)
         }
         const hashNewPassword = await hashPassword(password);
         const newUser = {...req.body, password: hashNewPassword};
-        const newUserDB = await createUserController(newUser);
+        const newUserDB = await userController.createUserController(newUser);
         done(null, newUserDB)
     }
     )
@@ -44,7 +44,7 @@ passport.use(
         callbackURL: 'http://localhost:8080/users/github'
     },
     async (accesToken, refreshToken, profile, done) => {
-        const usuario = await findUserController(profile._json.email)
+        const usuario = await userController.findUserController(profile._json.email)
         if(!usuario) {
             const newUser = {
                 first_name: profile._json.name.split(' ')[0],
@@ -52,7 +52,7 @@ passport.use(
                 email: profile._json.email,
                 password: ''
             }
-            const dbResult = await createUserController(newUser);
+            const dbResult = await userController.createUserController(newUser);
             done(null, dbResult);
         }else {
             done(null, usuario)
@@ -70,7 +70,7 @@ new googleStrategy({
     clientSecret: GOOGLE_CLIENT_SECRET,
     callbackURL: "http://localhost:8080/users/google"
   }, async (accessToken, refreshToken, profile, done) => {
-    const usuario = await findUserController(profile._json.email)
+    const usuario = await userController.findUserController(profile._json.email)
         if(!usuario) {
             const newUser = {
                 first_name: profile._json.given_name,
@@ -78,7 +78,7 @@ new googleStrategy({
                 email: profile._json.email,
                 password: ''
             }
-            const dbResult = await createUserController(newUser);
+            const dbResult = await userController.createUserController(newUser);
             done(null, dbResult);
         }else {
             done(null, usuario)
@@ -92,6 +92,6 @@ passport.serializeUser((usuario, done) => {
 
 
 passport.deserializeUser(async(_id, done) => {
-    const usuario = await findUserByIdController(_id);
+    const usuario = await userController.findUserByIdController(_id);
     done(null, usuario)
 })

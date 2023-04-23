@@ -3,22 +3,20 @@ import {__dirname} from './utils.js';
 import handlebars from 'express-handlebars';
 import {Server} from 'socket.io';
 import session from 'express-session';
-import  FileStore  from 'session-file-store';
 import viewsRouter from './routes/views.router.js';
 import productsRouter from './routes/products.router.js';
 import cartsRouter from './routes/carts.router.js';
 import usersRouter from './routes/users.router.js';
 import cookieParser from 'cookie-parser';
-import ProductManager from './dao/productManager.js';
-import './dao/dbConfig.js';
+import productMongo from './persistencia/DAOs/productsDAO/productsMongo.js';
+import './persistencia/mongoDB/dbConfig.js';
 import MongoStore from 'connect-mongo';
 import passport from 'passport';
 import './passport/passportStrategies.js';
 import sessionsRouter from './routes/sessions.router.js';
 import config from './config.js';
 
-const fileStore = FileStore(session);
-const productManager = new ProductManager();
+
 
 const app = express();
 const PORT = config.port;
@@ -73,7 +71,7 @@ socketServer.on('connection', (socket) => {
     
     socket.on('render', async () => {
         let productos = [];
-        productos = await productManager.getProducts()
+        productos = await productMongo.getProducts()
         if (productos.length !== 0){         
             socketServer.emit('renderizado', productos )
         } else {
@@ -83,7 +81,7 @@ socketServer.on('connection', (socket) => {
 
     socket.on('agregar', async (obj) => {
         await productManager.addProduct(obj)
-        const productos = await productManager.getProductsForHandle()
+        const productos = await productMongo.getProductsForHandle()
         if (productos) {
             socketServer.emit('Agregado', productos);
         }else {
@@ -93,8 +91,8 @@ socketServer.on('connection', (socket) => {
     })
 
     socket.on('borrar', async (id) => {
-        const productoAborrar = await productManager.deleteProduct(id);
-        const newProducts = await productManager.getProductsForHandle();
+        const productoAborrar = await productMongo.deleteOne(id);
+        const newProducts = await productMongo.getProductsForHandle();
         if (productoAborrar) {
             socketServer.emit('borrado', newProducts )
         }else {

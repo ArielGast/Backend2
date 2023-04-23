@@ -1,67 +1,72 @@
-import ProductManager from '../dao/productManager.js'
+import productMongo from '../persistencia/DAOs/productsDAO/productsMongo.js';
 
-const productManager = new ProductManager();
-
-
-export async function getProductsService (lim,pag,qry,srt) {
-    try {
-        const options = {
-            limit: lim,
-            page: pag,
-            query: qry,
-            sort: srt
+class ProductService {
+    constructor() {
+        this.dao= productMongo;
+    }
+    async  getProductsService (lim,pag,qry,srt) {
+        try {
+            const options = {
+                limit: lim,
+                page: pag,
+                query: qry,
+                sort: srt
+            }
+            const listado =  await this.dao.getProducts(options)  
+            return listado;
+        } catch (error) {
+            return error;
         }
-        const listado =  await productManager.getProducts(options)  
-        return listado;
-    } catch (error) {
-        return error;
     }
-}
-
-export async function getProductsForHandleService (limit) {
-    try {
-        if (limit == '') {
-            return await productManager.getProductsForHandle();
-        }else {
-            return await productManager.getProductsForHandlewLim(limit);
+    
+    async getProductsForHandleService (limit) {
+        try {
+            if (limit == '') {
+                return await this.dao.getProductsForHandle();
+            }else {
+                return await this.dao.getProductsForHandlewLim(limit);
+            }
+        } catch (error) {
+            return error;
         }
-    } catch (error) {
-        return error;
     }
-}
+    
+    async  getProductByIdService(id) {
+        try {
+            const product = await this.dao.findOne(id);
+            return true;
+        } catch (error) {
+            return error;
+        }
+    }
+    
+    async addProductService(obj) {
+        try {
+            const newProduct = await this.dao.updateOne(obj);
+            return newProduct;
+        } catch (error) {
+            return error;
+        }
+    }
+    
+    async deleteProductService (id) {
+        try {
+            await this.dao.deleteOne(id);
+            return true;
+        } catch (error) {
+            return error;
+        }
+    }
+    
+    async updateProductService (id, obj) {
+        try {
+            const updateProduct = await this.dao.updateOne({ _id: idProducto}, {$set: { "title":obj.title, "description":obj.description, "code":obj.code, "price":obj.price, "status":obj.status, "stock":obj.stock, "category":obj.category, "thumbnail":obj.thumbnail}});
+            return updateProduct;  
+        } catch (error) {
+            return error;
+        }
+    }
 
-export async function getProductByIdService(id) {
-    try {
-        const product = await productManager.getProductById(id);
-        return true;
-    } catch (error) {
-        return error;
-    }
 }
-
-export async function addProductService(obj) {
-    try {
-        const newProduct = await productManager.addProduct(obj);
-        return newProduct;
-    } catch (error) {
-        return error;
-    }
-}
-
-export async function deleteProductService (id) {
-    try {
-        await productManager.deleteProduct(id);
-        return true;
-    } catch (error) {
-        return error;
-    }
-}
-
-export async function updateProductService (id, obj) {
-    try {
-        const updateProduct = await productManager.updateProduct(id, obj);
-        return updateProduct;  
-    } catch (error) {
-        return error;
-    }
-}
+const productService = new ProductService();
+export default productService
