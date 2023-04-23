@@ -30,6 +30,15 @@ export default class BasicMongo {
         }
     }
 
+    async findByEmail (param){
+        try {
+            const response = await this.model.findOne({email: param })
+            return response
+        } catch (error) {
+            return error
+        }
+    }
+
     async deleteOne(id){
         try {
             const response = await this.model.deleteOne(id)

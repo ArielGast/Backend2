@@ -3,7 +3,8 @@ import { Router } from "express";
 const router = Router();
 
 router.get('/current', (req,res) => {
-    if (req.session){
+    console.log(req.session.passport)
+    if (req.session.passport){
         const auth = req.session.auth
         res.send(`Usuario autenticado mediante ${auth}`)
     } else {

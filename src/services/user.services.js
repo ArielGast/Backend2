@@ -6,7 +6,7 @@ class UserService {
     }
     async findUserService (email) {
         try {
-            const user = await this.dao.findOne(email);
+            const user = await this.dao.findByEmail(email);
             return user
         } catch (error) {
             return error;
