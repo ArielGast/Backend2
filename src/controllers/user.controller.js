@@ -4,6 +4,7 @@ import { hashPassword, comparePasswords } from '../utils.js';
 
 
 const ADMIN_EMAIL= config.admin_email;
+const ADMIN_PASSWORD = config.admin_pass;
 
 class UserController  {
     async findUserController (email) {
@@ -45,25 +46,27 @@ class UserController  {
     async loginController (req, res) {
         try {
             const {email, password} = req.body;
-            const hashedPassword = hashPassword(password)
-            const usuario =  await userService.findUserService(email); 
-            if (usuario.length !==0) {
-                const isPassword = await comparePasswords(password, usuario[0].password);
-                if (isPassword) {
-                    for (const key in req.body) {
-                        req.session[key] = req.body[key]
-                    }
-                    req.session.logged = true;
-                    if(email === ADMIN_EMAIL){ 
-                        req.session.isAdmin = true;
-                    }else {
-                        req.session.isAdmin = false;
-                    } 
-                }
-                res.redirect('/views/perfil')
+            if(email === ADMIN_EMAIL || password===ADMIN_PASSWORD){ 
+                req.session.isAdmin = true;
+                req.session.logged = true;
+                res.redirect('/api/products')
             }else {
+                req.session.isAdmin = false;
+                const hashedPassword = hashPassword(password)
+                const usuario =  await userService.findUserService(email); 
+                if (usuario.length !==0) {
+                    const isPassword = await comparePasswords(password, usuario[0].password);
+                    if (isPassword) {
+                        for (const key in req.body) {
+                            req.session[key] = req.body[key]
+                        }
+                        req.session.logged = true;
+                        res.redirect('/views/perfil')
+                    } 
+                } else {
                 res.redirect('/views/errorLogin')
             }
+        }
         } catch (error) {
             return res.status(500).json({error})       
         }

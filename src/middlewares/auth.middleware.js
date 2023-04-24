@@ -23,5 +23,21 @@ export function isAdmin(req,res,next) {
          req.session.role = 'User'
     }
     next();
-    
+}
+
+export function AdminPermission (req,res,next) {
+    if (req.session.isAdmin) {
+        next()
+    } else {
+        res.status(403).json({Message:'Forbiden'})
+    }
+}
+
+export function UserPermission (req,res,next) {
+    if (!req.session.isAdmin) {
+        next();
+    } else {
+        res.status(403).json({Message:'Forbiden'})
+        
+    }
 }

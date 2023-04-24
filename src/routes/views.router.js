@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import productController from '../controllers/product.controller.js';
 import  messageMongo from '../persistencia/DAOs/messagesDAO/messageMongo.js';
-import { auth, isLogged, isAdmin } from '../middlewares/auth.middleware.js';
+import { auth, isLogged, isAdmin, UserPermission } from '../middlewares/auth.middleware.js';
 
 
 const router = Router();
@@ -20,7 +20,7 @@ router.get ('/realtimeproducts',  async (req,res) => {
     res.render('realTimeProducts', {products})
 })
 
-router.get ('/chat', async(req,res) => {
+router.get ('/chat', UserPermission,async(req,res) => {
 
     const newMessage = await messageMongo.getMessages();
     res.render ('chat', newMessage)
