@@ -46,7 +46,7 @@ class UserController  {
     async loginController (req, res) {
         try {
             const {email, password} = req.body;
-            if(email === ADMIN_EMAIL || password===ADMIN_PASSWORD){ 
+            if(email === ADMIN_EMAIL && password===ADMIN_PASSWORD){ 
                 req.session.isAdmin = true;
                 req.session.logged = true;
                 res.redirect('/api/products')

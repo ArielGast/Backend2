@@ -14,6 +14,16 @@ class CartMongo extends BasicMongo {
             return error;
         }
     }
+
+    async findByCustomId (param) {
+        const id = parseInt(param);
+        try {
+            const response = await cartsModel.findOne({idCart: id})
+            return response;
+        } catch (error) {
+            return error
+        }
+    }
 }
 
 const cartMongo = new CartMongo(cartsModel)

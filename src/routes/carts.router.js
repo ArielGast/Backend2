@@ -12,5 +12,6 @@ router.delete('/:cId/products/:pId', UserPermission,cartController.deleteProduct
 router.put('/:cId', cartController.updateCartController);
 router.put('/:cId/products/:pId', UserPermission,cartController.updateProductQtyController);
 router.delete('/:cId', UserPermission ,cartController.deleteAllProductsController);
+router.post('/:cId/purchase', UserPermission, cartController.purchaseController);
 
 export default router

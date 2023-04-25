@@ -31,7 +31,7 @@ class CartService {
     
     async addToCartService(idCar, idP) {
         try {
-            const searchCart = await this.dao.findOne(idCar);
+            const searchCart = await this.dao.findByCustomId(idCar);
             const findProduct = searchCart.products.findIndex(p => p.idProduct == idP);
             if (findProduct === -1) {
                 const obj = {
@@ -51,7 +51,7 @@ class CartService {
     
     async getCartByIdService (idC) {
         try {
-            const cart = this.dao.findOne(idC)
+            const cart = this.dao.findByCustomId(idC)
             return cart
         } catch (error) {
             return error
@@ -60,15 +60,19 @@ class CartService {
      
     
     async deleteProductFromCartService (idCar, idP) {
+        const idCarInt = parseInt(idCar);
         try {
             let response;
-                const searchCart = await this.dao.findOne(idCar);
+                const searchCart = await this.dao.findByCustomId(idCar);
                 const findProduct = searchCart.products.findIndex(p => p.idProduct == idP);
                 if (findProduct === -1) {
                     response = 'Error';
                     return response;
                 } else {
-                   await this.dao.updateOne({idCart: idCar},{$pull:{products: {idProduct: idP }}})
+                    const objUpdated = {idCart: idCarInt, products:[]};
+                    await this.dao.updateOne(objUpdated);
+
+                    //await this.dao.updateOne({idCart: idCarInt},{$pull:{products: {idProduct: idP }}})
                     response = 'Succes';
                     return response
                 }       
@@ -97,10 +101,11 @@ class CartService {
     
     async deleteAllProductsService (idCar) {
         try {
-            const cart = await this.dao.findOne(idCar);
+            const cart = await this.dao.findByCustomId(idCar);
             const productIds = cart.products.map(product => product.idProduct);
             productIds.forEach(p => {
                 this.deleteProductFromCartService(idCar, p)
+                
             });
             return 'Succes'  
         } catch (error) {

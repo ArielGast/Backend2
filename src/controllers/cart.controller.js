@@ -1,23 +1,24 @@
 import cartService from '../services/cart.services.js';
 import productService from '../services/product.services.js';
+import ticketService from '../services/ticket.services.js';
 
 class CartController {
     async getCartByIdController (req, res) {
         try {
             const {cId} = req.params;
             const cart = await cartService.getCartByIdService(cId);
-            res.status(200).json({messages: 'Carts found',cart});
+            return res.status(200).json({messages: 'Carts found',cart});
         } catch (error) {
-            res.status(500).json({error})
+            return res.status(500).json({error})
         }   
     }
     
     async addCartController (req, res) {
         try {
             const cart = await cartService.addCartService();
-            res.status(200).json({status: 'Succes', message: 'Cart created'})
+            return res.status(200).json({status: 'Succes', message: 'Cart created'})
         } catch (error) {
-            res.status(500).json({error})        
+            return res.status(500).json({error})        
         }
     }
     
@@ -31,13 +32,13 @@ class CartController {
             } else {
                 const response = await cartService.addToCartService(cId, pId);
                 if (response){
-                    res.status(200).json({status: 'Succes', message: 'Product added'})
+                    return res.status(200).json({status: 'Succes', message: 'Product added'})
                 } else {
-                    res.status(400).json({status:'Error', message: 'Not added'})
+                    return res.status(400).json({status:'Error', message: 'Not added'})
                 }   
             }  
         } catch (error) {
-            res.status(500).json({error})                
+            return res.status(500).json({error})                
         }
     }
     
@@ -46,13 +47,13 @@ class CartController {
             const { cId, pId} = req.params;
             const request = await cartService.deleteProductFromCartService(cId, pId)
             if (request == 'Error') {
-                res.status(400).json({status: 'Error', message: 'Product or cart not found'});
+                 return res.status(400).json({status: 'Error', message: 'Product or cart not found'});
             }
             if (request == 'Succes') {
-                res.status(200).json({status: 'Succes', message: 'Product remove from cart'});
+                return res.status(200).json({status: 'Succes', message: 'Product remove from cart'});
             }
         } catch (error) {
-            res.status(500).json({error})                        
+            return res.status(500).json({error})                        
         }
     }
     
@@ -61,9 +62,9 @@ class CartController {
             const {cId} = req.params;
             const productos = [];
             const request = await cartService.updateCartService(cId, productos);
-            res.status(200).json({status: 'Succes', message: 'Cart updated'});
+             return res.status(200).json({status: 'Succes', message: 'Cart updated'});
         } catch (error) {
-            res.status(500).json({error})
+            return res.status(500).json({error})
         }
     }
     
@@ -73,12 +74,12 @@ class CartController {
             const {newQty} = req.body;
             const response = await cartService.updateProductQtyService(cId, pId, newQty);
             if (response == 0) {
-                res.status(404).json({status: 'Error', message: 'Not updated'})
+                return res.status(404).json({status: 'Error', message: 'Not updated'})
             }else {
-                res.status(200).json({status: 'Succes', message: 'Quantity updated'})
+               return res.status(200).json({status: 'Succes', message: 'Quantity updated'})
             }
         } catch (error) {
-            res.status(500).json({error})
+           return res.status(500).json({error})
         }
     }
     
@@ -92,10 +93,48 @@ class CartController {
                 res.status(400).send({status: 'Error', message: 'Error'})
             }
         } catch (error) {
-            res.status(500).json({error})
+            return res.status(500).json({error})
         }
     }
 
+    async purchaseController (req,res) {
+        try {
+            const {email} = req.session;
+            let noPurchase = [];
+            let totalPurchase = 0;
+            const {cId} = req.params;
+            const cart = await cartService.getCartByIdService(cId);
+            if (!cart || cart.products.length == 0) {
+                return res.status(404).json({message: 'Cart not found or empty'})
+            }
+            for(const product of cart.products) {
+                const productData = await productService.getProductByIdService(product._id);
+                if (!productData) {
+                    return res.status(404).json({message: 'Product not found'})
+                }    
+                if (productData.stock < product.quantity) {
+                    noPurchase.push(productData._doc);
+                } else {
+                    const newQty = productData.stock - product.quantity;
+                    const updatedProduct= {...productData._doc, stock: newQty };
+                    await productService.updateProductService(product._id, updatedProduct)
+                    totalPurchase += product.quantity * productData.price;
+                }
+            }
+            const ticketData = {
+                code: 'A -'+ (1000000000*Math.random()).toFixed(0),
+                purchase_datetime: new Date(),
+                amount: totalPurchase,
+                purchaser: email
+            }
+            const ticket =  await ticketService.createTicket(ticketData);
+            await cartService.deleteAllProductsService(cId);
+            if (noPurchase.length > 0) await cartService.updateCartService(cId, {products: noPurchase});
+            return res.json({message: 'Succeful Purchase', ticket})          
+        } catch (error) {
+            return res.status(500).json({error})
+        }
+    }
 }
 
 export default new CartController();

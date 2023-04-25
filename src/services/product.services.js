@@ -34,7 +34,7 @@ class ProductService {
     async  getProductByIdService(id) {
         try {
             const product = await this.dao.findOne(id);
-            return true;
+            return product;
         } catch (error) {
             return error;
         }
@@ -58,9 +58,11 @@ class ProductService {
         }
     }
     
-    async updateProductService (id, obj) {
+    async updateProductService (idProducto, obj) {
+        const objUpdated = {_id: idProducto, ...obj};
         try {
-            const updateProduct = await this.dao.updateOne({ _id: idProducto}, {$set: { "title":obj.title, "description":obj.description, "code":obj.code, "price":obj.price, "status":obj.status, "stock":obj.stock, "category":obj.category, "thumbnail":obj.thumbnail}});
+            const updateProduct = await this.dao.updateOne(objUpdated);
+            //const updateProduct = await this.dao.updateOne({ _id: idProducto}, {$set: { "title":obj.title, "description":obj.description, "code":obj.code, "price":obj.price, "status":obj.status, "stock":obj.stock, "category":obj.category, "thumbnail":obj.thumbnail}});
             return updateProduct;  
         } catch (error) {
             return error;
