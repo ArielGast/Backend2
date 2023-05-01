@@ -9,5 +9,6 @@ router.get('/:pId', productController.getProductByIdController);
 router.post('/', AdminPermission ,productController.addProductController);
 router.put('/:pId', AdminPermission ,productController.updateProductController);
 router.delete('/:pId', AdminPermission, productController.deleteProductController);
+router.post('/mockingproducts', productController.mockingProducts);
 
 export default router
