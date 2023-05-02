@@ -42,7 +42,7 @@ class ProductService {
     
     async addProductService(obj) {
         try {
-            const newProduct = await this.dao.updateOne(obj);
+            const newProduct = await this.dao.create(obj);
             return newProduct;
         } catch (error) {
             return error;

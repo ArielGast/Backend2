@@ -79,8 +79,9 @@ class ProductController {
                 CustomError.createCustomError({
                     name: ErrorsName.PRODUCT_PRINCIPAL_ERROR,
                     message: ErrorsMessage.PRODUCT_PRINCIPAL_ERROR,
-                    cause: ErrorsCause.PRODUCT_PRINCIPAL_ERROR,
-                })   
+                    cause: ErrorsCause.PRODUCT_PRINCIPAL_ERROR
+                });     
+             
             }
             const respuesta = await productService.addProductService(product);
             if ( respuesta.length == 0) {
