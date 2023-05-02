@@ -15,6 +15,7 @@ import passport from 'passport';
 import './passport/passportStrategies.js';
 import sessionsRouter from './routes/sessions.router.js';
 import config from './config.js';
+import mockingRouter from './routes/mock.router.js';
 
 
 
@@ -53,6 +54,7 @@ app.use('/api/carts', cartsRouter);
 app.use('/views', viewsRouter);
 app.use('/users', usersRouter);
 app.use('/api/sessions', sessionsRouter);
+app.use('/mockingproducts', mockingRouter);
 app.use(cookieParser());
 
 

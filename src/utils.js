@@ -1,8 +1,7 @@
 import {dirname} from 'path';
 import { fileURLToPath } from 'url';
 import bcrypt from 'bcrypt';
-import {faker} from '@faker-js/faker';
-import { log } from 'console';
+import {faker} from '@faker-js/faker'
 
 export const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -17,9 +16,8 @@ export const comparePasswords = async (password, hashedPassword) => {
 faker.locale = 'es';
 
 export const generateProducts =  async () => {
-    console.log('ACA entra primero');
     return {
-        id: faker.database.mongodbObjectId(),
+        //_id: faker.database.mongodbObjectId(),
         title: faker.commerce.productName(),
         description: faker.commerce.productDescription(),
         code: faker.random.alpha(3)+faker.random.numeric(3),

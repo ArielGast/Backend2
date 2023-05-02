@@ -1,5 +1,5 @@
 import productService from "../services/product.services.js";
-import { generateProducts } from "../utils.js";
+
 
 class ProductController {
 
@@ -117,22 +117,6 @@ class ProductController {
             }       
         } catch (error) {
             return res.status(500).json({error});
-        }
-    }
-
-    async mockingProducts (req, res) {
-        try {
-            console.log('ACA ENTRA');
-            let products = [];
-            for (let i = 0;i<100; i++) {
-                products.push( await generateProducts());
-            } 
-            //console.log(products);
-            res.json(products)
-        }catch (error) {
-            console.log('ERRRORRRRRRR');
-            return res.status(500).json({error})
-            
         }
     }
 
