@@ -1,4 +1,6 @@
 import productService from "../services/product.services.js";
+import CustomError from "../utils/errors/CustomError.js";
+import {ErrorsName, ErrorsMessage, ErrorsCause} from '../utils/errors/error.enum.js';
 
 
 class ProductController {
@@ -73,7 +75,12 @@ class ProductController {
         try {
             let product = req.body;
             if (product.title === '' || product.description ==='' || product.code ==='' || product.price === '' || product.stock === '' || product.category === '') {
-                return res.status(400).json({status:'Error', message: 'All data required'})   
+                //return res.status(400).json({status:'Error', message: 'All data required'})
+                CustomError.createCustomError({
+                    name: ErrorsName.PRODUCT_PRINCIPAL_ERROR,
+                    message: ErrorsMessage.PRODUCT_PRINCIPAL_ERROR,
+                    cause: ErrorsCause.PRODUCT_PRINCIPAL_ERROR,
+                })   
             }
             const respuesta = await productService.addProductService(product);
             if ( respuesta.length == 0) {

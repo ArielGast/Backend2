@@ -16,6 +16,7 @@ import './passport/passportStrategies.js';
 import sessionsRouter from './routes/sessions.router.js';
 import config from './config.js';
 import mockingRouter from './routes/mock.router.js';
+import { errorMiddleware } from './utils/errors/error.middleware.js';
 
 
 
@@ -56,7 +57,7 @@ app.use('/users', usersRouter);
 app.use('/api/sessions', sessionsRouter);
 app.use('/mockingproducts', mockingRouter);
 app.use(cookieParser());
-
+app.use(errorMiddleware);
 
 
 
