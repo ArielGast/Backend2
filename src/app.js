@@ -19,7 +19,6 @@ import mockingRouter from './routes/mock.router.js';
 import { errorMiddleware } from './utils/errors/error.middleware.js';
 
 
-
 const app = express();
 const PORT = config.port;
 
