@@ -1,0 +1,24 @@
+{ message: 'log Error', level: 'fatal' }
+{ message: 'log Error', level: 'error' }
+{ message: 'log Error', level: 'warning' }
+{ message: 'log Error', level: 'info' }
+{
+  message: 'log Error',
+  level: 'fatal',
+  timestamp: '2023-05-06T15:50:54.841Z'
+}
+{
+  message: 'log Error',
+  level: 'error',
+  timestamp: '2023-05-06T15:50:54.844Z'
+}
+{
+  message: 'log Error',
+  level: 'warning',
+  timestamp: '2023-05-06T15:50:54.845Z'
+}
+{
+  message: 'log Error',
+  level: 'info',
+  timestamp: '2023-05-06T15:50:54.845Z'
+}

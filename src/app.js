@@ -17,6 +17,7 @@ import sessionsRouter from './routes/sessions.router.js';
 import config from './config.js';
 import mockingRouter from './routes/mock.router.js';
 import { errorMiddleware } from './utils/errors/error.middleware.js';
+import errorsRouter from './routes/errors.router.js';
 
 
 const app = express();
@@ -55,6 +56,7 @@ app.use('/views', viewsRouter);
 app.use('/users', usersRouter);
 app.use('/api/sessions', sessionsRouter);
 app.use('/mockingproducts', mockingRouter);
+app.use('/loggerTest', errorsRouter);
 app.use(cookieParser());
 app.use(errorMiddleware);
 

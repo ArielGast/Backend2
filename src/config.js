@@ -10,7 +10,8 @@ const obj = {
     github_clientID: process.env.GITHUB_CLIENTID,
     github_client_Secret: process.env.GITHUB_CLIENT_SECRET,
     google_clientID: process.env.GOOGLE_CLIENTID,
-    google_client_Secret: process.env.GOOGLE_CLIENT_SECRET
+    google_client_Secret: process.env.GOOGLE_CLIENT_SECRET,
+    node_env: process.env.NODE_ENV
 }
 
 export default obj
