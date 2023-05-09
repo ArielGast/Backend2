@@ -1,6 +1,7 @@
 import cartService from '../services/cart.services.js';
 import productService from '../services/product.services.js';
 import ticketService from '../services/ticket.services.js';
+import logger from '../utils/winston.js';
 
 class CartController {
     async getCartByIdController (req, res) {
@@ -9,6 +10,7 @@ class CartController {
             const cart = await cartService.getCartByIdService(cId);
             return res.status(200).json({messages: 'Carts found',cart});
         } catch (error) {
+            logger.info('Cart not found');
             return res.status(500).json({error})
         }   
     }

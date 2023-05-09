@@ -18,6 +18,7 @@ import config from './config.js';
 import mockingRouter from './routes/mock.router.js';
 import { errorMiddleware } from './utils/errors/error.middleware.js';
 import errorsRouter from './routes/errors.router.js';
+import logger from './utils/winston.js';
 
 
 const app = express();
@@ -63,14 +64,14 @@ app.use(errorMiddleware);
 
 
 const httpServer = app.listen(PORT, ()=> {
-    console.log(`Escuchando al puerto ${PORT}`);
+    logger.http(`Escuchando al puerto ${PORT}`);
 })
 const socketServer = new Server(httpServer);
 
 socketServer.on('connection', (socket) => {
-    console.log('Cliente conectado', socket.id)
+    logger.http('Cliente conectado', socket.id)
     socket.on('disconnect', () => {
-        console.log('Cliente desconectado')
+        logger.info('Cliente desconectado')
     })
     
     socket.on('render', async () => {

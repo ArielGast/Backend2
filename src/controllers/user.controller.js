@@ -1,6 +1,7 @@
 import userService from "../services/user.services.js";
 import config from '../config.js';
 import { hashPassword, comparePasswords } from '../utils.js';
+import logger from "../utils/winston.js";
 
 
 const ADMIN_EMAIL= config.admin_email;
@@ -64,7 +65,8 @@ class UserController  {
                         res.redirect('/views/perfil')
                     } 
                 } else {
-                res.redirect('/views/errorLogin')
+                    logger.warning('Fail login attempt')
+                    res.redirect('/views/errorLogin')
             }
         }
         } catch (error) {
