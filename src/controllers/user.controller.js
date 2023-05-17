@@ -1,11 +1,16 @@
 import userService from "../services/user.services.js";
 import config from '../config.js';
-import { hashPassword, comparePasswords } from '../utils.js';
+import { hashPassword, comparePasswords, generateToken } from '../utils.js';
 import logger from "../utils/winston.js";
+import nodemailer from 'nodemailer';
+
 
 
 const ADMIN_EMAIL= config.admin_email;
 const ADMIN_PASSWORD = config.admin_pass;
+const USER_GMAIL = config.user_gmail;
+const USER_PASS = config.user_pass;
+
 
 class UserController  {
     async findUserController (email) {
@@ -114,6 +119,74 @@ class UserController  {
             
         }
     }
+
+    async resetpassController (req,res) {
+        try {
+            res.redirect('/views/resetpass');
+        } catch (error) {
+            return res.status(500).json({error})
+        }
+    }
+
+    async resetController (req,res) {
+        const {email} = req.body;
+        const user = await userService.findUserService(email);
+        if (!user) return res.status(404).send({message: 'Mail not found'})
+        const transport = nodemailer.createTransport({
+            service: 'gmail',
+            port: 587,
+            auth: {
+                user: USER_GMAIL,
+                pass: USER_PASS
+            }
+        })
+        const token = generateToken(email)
+        const resetLink = `http://localhost:8080/users/changepass?token=${token}`
+        try {
+            const result = await transport.sendMail({
+                from: 'System administrator',
+                to: email,
+                subject: 'test de recupero de contraseña',
+                html: `
+                    <h2> Link de recupero de contraseña</h2>
+                    <a href= ${resetLink}>Click aqui</a>
+
+                `,
+                attachments: [] 
+            })
+            if(result.accepted.length !== 0) return res.status(200).send({message:'Mail Send'})
+            
+        } catch (error) {
+            return res.status(500).json({error})
+        }
+
+    }
+
+    async changePass (req,res) {
+        try {
+            res.redirect('/views/changepass')
+        } catch (error) {
+            return res.status(500).json({error})
+        }
+    }
+
+    async change (req,res,) {
+        const email = req.user
+        const {newPassword} = req.body;
+        try {
+            const user = await userService.findUserService(email);
+            const hashNewPassword = hashPassword(newPassword);
+            const isPassword = await comparePasswords(newPassword, user[0].password);
+            if (isPassword) return res.send({message: 'Password must be different'})
+            const userUpdated = await userService.updateUser({password: hashNewPassword, ...user})
+            res.status(200).send({message: 'Password changed successfully'})
+            return userUpdated;     
+        } catch (error) {
+            return res.status(500).json({error})
+        }
+
+    }
+
 }
 
 export default new UserController();

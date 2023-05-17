@@ -113,11 +113,11 @@ class ProductController {
     async deleteProductController(req,res) {
         try {
             const {pId} = req.params;
+            const {email} = req.session;
             const product = await productService.getProductByIdService(pId);
-            if (!true) {
-                return res.status(400).json({status:'Error' , message: 'No product in Data Base'})            
-            }
-            const response = await deleteProductService(pId)
+            if (!true) return res.status(400).json({status:'Error' , message: 'No product in Data Base'})            
+            if (product.owner !== email) return res.status(400).send({message: 'Forbidden'})
+            const response = await productService.deleteProductService(pId)
             if (response === true) {
                 return res.status(200).json({status: 'Succes', message: 'Product deleted'})
             } else {

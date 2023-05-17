@@ -1,5 +1,8 @@
 import mongoose from 'mongoose';
 import mongoosePaginate from 'mongoose-paginate-v2';
+import config from '../../../config.js';
+
+const EMAIL_ADMIN = config.email_admin;
 
 const productsSchema = new mongoose.Schema({
     title: {
@@ -33,9 +36,14 @@ const productsSchema = new mongoose.Schema({
     },
     thumbnail: {
         type: Array,
+    },
+    owner: {
+        type: [{type: mongoose.SchemaTypes.ObjectId, ref: 'Users'}],
+        default: EMAIL_ADMIN,
     }
 
 })
+
 
 productsSchema.plugin(mongoosePaginate);
 

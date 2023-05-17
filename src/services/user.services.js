@@ -31,6 +31,15 @@ class UserService {
         }
 
     }
+
+    async updateUser (obj) {
+        try {
+            const updateUser = await this.dao.updateOne(obj);
+            return updateUser
+        } catch (error) {
+            return error
+        }
+    }
 }
  const userService = new UserService();
  export default userService;

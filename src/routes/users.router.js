@@ -1,6 +1,7 @@
 import { Router } from "express";
 import userController from '../controllers/user.controller.js';
 import passport from "passport";
+import { authToken } from "../utils.js";
 
 const router = Router();
 
@@ -22,5 +23,10 @@ router.get('/github', passport.authenticate('githubRegistro', {failureRedirect: 
 // Google
 router.get('/registroGoogle', passport.authenticate('google',{scope:['profile', 'email']}));
 router.get('/google', passport.authenticate('google', {scope:['email']}), userController.googleController);
+
+router.get('/resetpass',userController.resetpassController);
+router.post('/reset', userController.resetController);
+router.get('/changepass',authToken,userController.changePass);
+router.post('/change', userController.change);
 
 export default router;

@@ -44,6 +44,14 @@ router.get('/perfil', auth, isAdmin, productController.getProductsForPerfilContr
 
 router.get('/errorLogin', (req,res) =>{
     res.render('errorLogin');
+
 })
 
+router.get('/resetpass', (req,res) => {
+    res.render('resetpass');
+})
+
+router.get('/changepass', (req,res) => {
+    res.render('changepass');
+})
 export default router
