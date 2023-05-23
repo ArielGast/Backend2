@@ -38,7 +38,7 @@ const productsSchema = new mongoose.Schema({
         type: Array,
     },
     owner: {
-        type: [{type: mongoose.SchemaTypes.ObjectId, ref: 'Users'}],
+        type: String,
         default: EMAIL_ADMIN,
     }
 

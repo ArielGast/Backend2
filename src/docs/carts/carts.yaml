@@ -1,0 +1,160 @@
+paths:
+  /api/carts/:
+    post:
+      summary: Add Cart.
+      tags:
+        - Carts
+      description: Create a new cart.
+      responses:
+        '200':    
+          description: A cart created
+        '400':
+          description: An error
+  /api/carts/{cId}:
+    get:
+      summary: Return one Carts.
+      tags: 
+        - Carts
+      parameters:
+        - name: CartId
+          in: path
+          description: Cart identifier
+      description: Returns an specific Cart.
+      responses:
+        '200':    
+          description: a cart object
+          content:
+            aplication/json:
+              schemas:
+                $ref: '#/components/schemas/Cart'
+              example:
+                _id: 63f3550fe3c654745ttg434
+                id: 01
+                products: [rr564550fe3c654713aa85ffg4,56y3550fe3c654713aafr587,63f3550fe3c654713aa81254]
+        '400':
+          description: Some error
+        '500':
+          description: Not found
+    put:
+      summary: Update a particular cart.
+      tags: 
+        - Carts
+      parameters:
+        - name: cartId
+          in: path
+          description: Cart identifier
+      description: Update an specific cart.
+      responses:
+        '200':    
+          description: cart updated
+        '400':
+          description: Some error
+        '500':
+          description: Not found
+    delete:
+      summary: Delete all Products from a cart.
+      tags: 
+        - Carts
+      parameters:
+        - name: cartId
+          in: path
+          description: Cart identifier
+      description: Delete all product from a specific cart.
+      responses:
+        '200':    
+          description: all product remove from cart
+        '400':
+          description: Some error
+        '500':
+          description: Not found
+  /api/carts/{cId}/product/{pId}:
+    post:
+      summary: Add a product to a Cart.
+      tags: 
+        - Carts
+      parameters:
+        - name: CartId
+          in: path
+          description: Cart identifier
+        - name: ProductId
+          in: path
+          description: Product identifier
+      description: Add a specific product to a specific cart.
+      responses:
+        '200':    
+          description: product added to cart
+        '400':
+          description: Some error
+        '500':
+          description: Not found
+  /api/carts/{cId}/products/{pId}:
+    put:
+      summary: Update a product from a Cart.
+      tags: 
+        - Carts
+      parameters:
+        - name: CartId
+          in: path
+          description: Cart identifier
+        - name: ProductId
+          in: path
+          description: Product identifier
+      description: Update a specific product in a specific cart.
+      responses:
+        '200':    
+          description: product aupdated in a specific cart
+        '400':
+          description: Some error
+        '500':
+          description: Not found
+    delete:
+      summary: Remove a product from Cart.
+      tags: 
+        - Carts
+      parameters:
+        - name: CartId
+          in: path
+          description: Cart identifier
+        - name: ProductId
+          in: path
+          description: Product identifier
+      description: Remove a specific product from a specific cart.
+      responses:
+        '200':    
+          description: product removed from cart
+        '400':
+          description: Some error
+        '500':
+          description: Not found  
+  /api/carts/{cId}/purchase:
+    post:
+      summary: Purchase a Cart.
+      tags: 
+        - Carts
+      parameters:
+        - name: CartId
+          in: path
+          description: Cart identifier
+      description: Purchase a specific cart.
+      responses:
+        '200':    
+          description: Cart purchased
+        '400':
+          description: Some error
+        '500':
+          description: Not found 
+components:
+  schemas:
+    Cart:
+      type: object
+      properties:
+        id:
+          type: string
+        idCart:
+          type: number
+        products:
+          type: array
+      example:
+        _id: 63f3550fe3c654713aa81271
+        idCart: 12
+        products: [rr564550fe3c654713aa85ffg4,56y3550fe3c654713aafr587,63f3550fe3c654713aa81254 ]

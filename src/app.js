@@ -19,6 +19,8 @@ import mockingRouter from './routes/mock.router.js';
 import { errorMiddleware } from './utils/errors/error.middleware.js';
 import errorsRouter from './routes/errors.router.js';
 import logger from './utils/winston.js';
+import swaggerUI from 'swagger-ui-express';
+import { swaggerSetup } from './utils/swaggerSpec.js';
 
 
 const app = express();
@@ -58,6 +60,7 @@ app.use('/users', usersRouter);
 app.use('/api/sessions', sessionsRouter);
 app.use('/mockingproducts', mockingRouter);
 app.use('/loggerTest', errorsRouter);
+app.use('/api/docs', swaggerUI.serve,swaggerUI.setup(swaggerSetup));
 app.use(cookieParser());
 app.use(errorMiddleware);
 

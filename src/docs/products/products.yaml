@@ -1,0 +1,124 @@
+paths:
+  /api/products/:
+    get:
+      summary: All Products.
+      tags:
+        - Products
+      description: Returns a list of products.
+      responses:
+        '200':    
+          description: A JSON array of products
+        '400':
+          description: An error
+    post:
+      summary: Add Product.
+      tags:
+        - Products
+      description: Add one Product.
+      responses:
+        '200':    
+          description: Product added
+        '400':
+          description: An error
+  /api/products/{pId}:
+    get:
+      summary: Return one Products.
+      tags: 
+        - Products
+      parameters:
+        - name: productId
+          in: path
+          description: Product identifier
+      description: Returns an specific product.          
+      responses:
+        '200':    
+          description: an object product
+          content:
+            aplication/json:
+              schemas:
+                $ref: '#/components/schemas/Products'
+              example:
+                id: 63f3550fe3c654713aa81271
+                title: "Producto prueba 1"
+                description: "Descripción generica producto prueba"
+                code: "abc123"
+                price: 980
+                status: true
+                stock: 160
+                category: "02"
+                thumbnail: []
+                owner: abc@mail.com
+        '400':
+          description: Some error
+        '500':
+          description: Not found
+    put:
+      summary: Update one Products.
+      tags: 
+        - Products
+      parameters:
+        - name: productId
+          in: path
+          description: Product identifier
+      description: Update an specific product.
+      responses:
+        '200':    
+          description: producto updated
+        '400':
+          description: Some error
+        '500':
+          description: Not found
+    delete:
+      summary: Delete one Products.
+      tags: 
+        - Products
+      parameters:
+        - name: productId
+          in: path
+          description: Product identifier
+      description: Delete an specific product.
+      responses:
+        '200':    
+          description: Product deleted
+        '400':
+          description: Some error
+        '500':
+          description: Not found
+components:
+  schemas:
+    Products:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        code:
+          type: string
+        price:
+          type: number
+        status:
+          type: boolean
+        stock:
+          type: number
+        categoty:
+          type: string
+        thumbnail:
+          type: array
+        owner:
+          type: string
+      example:
+        id: 63f3550fe3c654713aa81271
+        title: "Producto prueba 5"
+        description: "Descripción generica extendida prueba"
+        code: "xcz342"
+        price: 700
+        status: true
+        stock: 80
+        category: "01"
+        thumbnail: []
+        owner: a@mail.com
+
+
