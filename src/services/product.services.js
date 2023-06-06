@@ -42,6 +42,8 @@ class ProductService {
     
     async addProductService(obj) {
         try {
+            const existingProduct = await this.dao.findByCode({ code: obj.code })
+            if (existingProduct) return [];
             const newProduct = await this.dao.create(obj);
             return newProduct;
         } catch (error) {

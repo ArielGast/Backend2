@@ -39,6 +39,16 @@ export default class BasicMongo {
         }
     }
 
+    async findByCode (obj){
+        try {
+            const response = await this.model.findOne({code: obj.code })
+            return response
+        } catch (error) {
+            return error
+        }
+    }
+
+
     async deleteOne(id){
         try {
             const response = await this.model.deleteOne(id)

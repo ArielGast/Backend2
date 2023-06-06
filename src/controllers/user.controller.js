@@ -16,9 +16,9 @@ class UserController  {
     async findUserController (email) {
         try {
             const usuario =  await userService.findUserService(email); 
-            if (usuario.length !=0) {
+            if (usuario) {
                 return usuario;
-            }else {
+             }else {
                 return 'Not Found';
             }
         } catch (error) {
@@ -29,7 +29,7 @@ class UserController  {
     async createUserController (obj) {
         try {
             const newUser = await userService.createUserService(obj);
-            return  newUser;
+            return newUser
     
         } catch (error) {
             return error;          
@@ -60,8 +60,8 @@ class UserController  {
                 req.session.isAdmin = false;
                 const hashedPassword = hashPassword(password)
                 const usuario =  await userService.findUserService(email); 
-                if (usuario.length !==0) {
-                    const isPassword = await comparePasswords(password, usuario[0].password);
+                if (usuario) {
+                    const isPassword = await comparePasswords(password, usuario.password);
                     if (isPassword) {
                         for (const key in req.body) {
                             req.session[key] = req.body[key]

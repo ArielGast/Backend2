@@ -23,7 +23,7 @@ passport.use(
     },
     async (req, email, password, done) => {
         const usuario = await userController.findUserController(email);
-        if (usuario.length !== 0) {
+        if (usuario !== 'Not Found') {
             return done(null, false)
         }
         const hashNewPassword = await hashPassword(password);

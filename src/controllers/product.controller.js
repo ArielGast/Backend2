@@ -75,24 +75,22 @@ class ProductController {
         try {
             let product = req.body;
             if (product.title === '' || product.description ==='' || product.code ==='' || product.price === '' || product.stock === '' || product.category === '') {
-                //return res.status(400).json({status:'Error', message: 'All data required'})
-                CustomError.createCustomError({
+                 return CustomError.createCustomError({
                     name: ErrorsName.PRODUCT_PRINCIPAL_ERROR,
                     message: ErrorsMessage.PRODUCT_PRINCIPAL_ERROR,
-                    cause: ErrorsCause.PRODUCT_PRINCIPAL_ERROR
+                    cause: ErrorsCause.PRODUCT_PRINCIPAL_ERROR 
                 });     
              
             }
             const respuesta = await productService.addProductService(product);
-            if ( respuesta.length == 0) {
+            if ( respuesta.length === 0) {
                 return res.status(400).json({status:'Error', message: 'Data repeated'})
             } else {
-                return res.status(200).json({status: 'Success', message: 'Producto add successfully'}); 
+                return res.status(200).json({status: 'Success', respuesta}); 
             }        
         } catch (error) {
             return res.status(500).json({error});
-    
-        }
+        };
     }
     
     async updateProductController (req,res) {

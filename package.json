@@ -5,7 +5,10 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "start": " nodemon src/app.js"
+    "start": " nodemon src/app.js",
+    "testProducts": " mocha -t 10000 src/test/products.test.js",
+    "testCarts": "mocha -t 10000 src/test/carts.test.js",
+    "testSessions": "mocha -t 10000 src/test/session.test.js"
   },
   "keywords": [],
   "author": "",
@@ -32,5 +35,10 @@
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^4.6.3",
     "winston": "^3.8.2"
+  },
+  "devDependencies": {
+    "chai": "^4.3.7",
+    "mocha": "^10.2.0",
+    "supertest": "^6.3.3"
   }
 }

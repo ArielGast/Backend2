@@ -64,7 +64,7 @@ class CartController {
             const {cId} = req.params;
             const productos = [];
             const request = await cartService.updateCartService(cId, productos);
-             return res.status(200).json({status: 'Succes', message: 'Cart updated'});
+             return res.status(200).json({status: 'Succes', message: 'Cart updated', request});
         } catch (error) {
             return res.status(500).json({error})
         }

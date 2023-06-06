@@ -83,7 +83,8 @@ class CartService {
     
     async updateCartService (idCar, obj) {
         try {
-            const updateCart = await this.dao.updateOne({idCart: idCar}, {$set :{obj}});
+            await this.dao.updateOne({idCart: idCar}, {$set :{obj}});
+            const updateCart = await this.dao.findByCustomId(idCar)
             return updateCart
         } catch (error) {
             return error
