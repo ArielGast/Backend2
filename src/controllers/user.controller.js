@@ -81,12 +81,20 @@ class UserController  {
     
     async logoutController (req,res) {
         try {
+            const actualDate = new Date();
+            const userMail= req.session.email;
+            const fechaActual = actualDate.toLocaleDateString();
+            const horaActual = actualDate.toLocaleTimeString();
+            const logOut = {
+                last_connection: `${fechaActual} ${horaActual}`
+              };
+            const updateUser = await userService.findOneAndUpdate({ email: userMail }, logOut);
             req.session.destroy((error) => {
                 if (error) {
-                    return res.status(400).json({error});
+                    return res.status(400).json({error}) 
                 } else {
                     res.redirect('/views/login');
-                }
+                }                   
             })        
         } catch (error) {
             return res.status(500).json({error})       

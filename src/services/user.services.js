@@ -40,6 +40,15 @@ class UserService {
             return error
         }
     }
+
+    async findOneAndUpdate (email, obj) {
+        try {
+            const response = await this.dao.userFindOneAndUpdate(email, obj);
+            return response;
+        } catch (error) {
+            return error
+        }
+    }
 }
  const userService = new UserService();
  export default userService;

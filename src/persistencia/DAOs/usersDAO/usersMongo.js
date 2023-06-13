@@ -6,6 +6,14 @@ class UserMongo extends BasicMongo {
         super(model)
     }
 
+    async userFindOneAndUpdate(filter, obj) {
+        try {
+            const userupdate = await usersModel.findOneAndUpdate(filter, obj);
+            return userupdate
+        } catch (error) {
+            return error
+        }
+    }
 }
 
 const userMongo = new UserMongo(usersModel);

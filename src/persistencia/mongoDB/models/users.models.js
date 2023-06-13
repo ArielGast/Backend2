@@ -31,7 +31,19 @@ const usersSchema = new mongoose.Schema({
         type: String,
         requided: true,
         default: 'User'
+    },
+    documents: [{
+        name: {
+            type: String,
+        },
+        reference: {
+            type: String,
+        }
+    }],
+    last_connection: {
+        type: String
     }
+    
 })
 
 export const usersModel = mongoose.model('Users', usersSchema)
