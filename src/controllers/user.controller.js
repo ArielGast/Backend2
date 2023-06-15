@@ -5,7 +5,6 @@ import logger from "../utils/winston.js";
 import nodemailer from 'nodemailer';
 
 
-
 const ADMIN_EMAIL= config.admin_email;
 const ADMIN_PASSWORD = config.admin_pass;
 const USER_GMAIL = config.user_gmail;
@@ -192,7 +191,50 @@ class UserController  {
         } catch (error) {
             return res.status(500).json({error})
         }
+    }
 
+    async documentsLoader (req,res) {
+        try {
+            const userId = req.params.uid;
+            const user = await userService.findUserByIdService(userId);
+            if (!user) return res.status(404).json({ message: 'User not found'});
+            const filesUploaded = req.files;
+            for (const file in filesUploaded) {
+                const fileArray = filesUploaded[file];
+                for (const fields of fileArray) {
+                    const hasFile = user.documents.some((doc) => doc.name === fields.fieldname);
+                    if (hasFile) return res.status(400).json({message: 'File already loaded'});
+                    const doc = {
+                        name: fields.fieldname,
+                        reference: fields.path
+                    };
+                    user.documents.push(doc);
+                    await user.save();  
+            };  
+        };
+        return res.json({ message: 'Document(s) uploaded successfully' })
+        } catch (error) {
+            return res.status(500).json({error})
+        }
+    }
+
+    async userPremium (req,res) {
+        try {
+            const userId = req.params.uid;
+            const user = await userService.findUserByIdService(userId);
+            if (!user) return res.status(404).json({ message: 'User not found' });      
+            const requiredDocuments = ['identification', 'addressProof', 'accountStatement'];
+            const documentsUploaded = user.documents.filter(document => requiredDocuments.includes(document.name));
+            if (documentsUploaded.length !== requiredDocuments.length) {
+                return res.status(400).json({ message: 'All documents are required'});
+            } else {
+                user.role = 'Premium';
+                await user.save()
+                return res.status(200).json({message: 'User updated to Premium'});
+            } 
+        } catch (error) {
+            return res.status(500).json({error})            
+        }
     }
 
 }

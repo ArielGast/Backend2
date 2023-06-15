@@ -2,6 +2,7 @@ import { Router } from "express";
 import userController from '../controllers/user.controller.js';
 import passport from "passport";
 import { authToken } from "../utils.js";
+import { uploader } from "../utils.js";
 
 const router = Router();
 
@@ -28,5 +29,16 @@ router.get('/resetpass',userController.resetpassController);
 router.post('/reset', userController.resetController);
 router.get('/changepass',authToken,userController.changePass);
 router.post('/change', userController.change);
+
+router.post('/:uid/documents',uploader.fields([
+    { name: 'imagenPerfil', maxCount: 1 },
+    { name: 'productImage', maxCount: 100 },
+    { name: 'document', maxCount: 100 },
+    { name: 'identification', maxCount:1 },
+    { name: 'addressProof', maxCount:1 },
+    { name: 'accountStatement', maxCount:1 }
+  ]),userController.documentsLoader);
+
+router.put('/premium/:uid', userController.userPremium);  
 
 export default router;

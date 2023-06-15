@@ -32,9 +32,10 @@ const usersSchema = new mongoose.Schema({
         requided: true,
         default: 'User'
     },
-    documents: [{
+    documents:[{
         name: {
             type: String,
+            unique: true
         },
         reference: {
             type: String,
