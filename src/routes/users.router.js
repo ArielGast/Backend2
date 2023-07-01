@@ -42,7 +42,7 @@ router.post('/:uid/documents',uploader.fields([
 
 router.put('/premium/:uid', userController.userPremium);  
 router.get('/admin/users', AdminPermission, userController.getAllUsers);
-router.delete('/admin/deleteUsers' , AdminPermission, userController.deleteOldUsers);
+router.get('/admin/deleteusers', AdminPermission, userController.deleteOldUsers);
 
 
 export default router;

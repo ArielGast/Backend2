@@ -240,9 +240,10 @@ class UserController  {
 
     async getAllUsers (req,res) {
         try {
-            const users = await userService.getAllUsers();
+            console.log('------------------------');
+            const users = await userService.findAllService();
             const usersDTO = users.map((user) => new UserInfo(user));
-            res.status(200).json({usersDTO});
+            return res.status(200).json(usersDTO);
         } catch (error) {
             return res.status(500).json({error})
         }
@@ -250,17 +251,51 @@ class UserController  {
 
     async deleteOldUsers (req,res) {
         try {
+            let daysOfLastConnection = 0;
             const actualDate = new Date();
-            const fechaActual = actualDate.toLocaleDateString();
-            const users = await userService.getAllUsers();
-            console.log(users);
+            const users = await userService.findAllService();
+            for (const user of users){
+                if (user.email !== 'adminCoder@coder.com') {
+                    if (user.last_connection) {
+                        const lastconnection = user.last_connection.slice(0,9);
+                        const lastconnectionToDate = new Date(Date.parse(lastconnection))
+                        daysOfLastConnection = Math.floor((actualDate - lastconnectionToDate)/(24*60*60*1000));
+                    } else {
+                        daysOfLastConnection = 3;
+                    }
+                    if (daysOfLastConnection > 2) {
+                        console.log('--------------');
+                        console.log(`User ${user.first_name} ${user.last_name} will be eliminated due inactivity`)
+                        await userService.deleteOneService(user._id);
+                        const transport = nodemailer.createTransport({
+                            service: 'gmail',
+                            port: 587,
+                            auth: {
+                                user: USER_GMAIL,
+                                pass: USER_PASS
+                            }
+                        });
+                        const result = await transport.sendMail({
+                            from: 'System administrator',
+                            to: user.email,
+                            subject: 'Información sobre su cuenta',
+                            html: `
+                                <h2> Cuenta Eliminada</h2>
+                                <a> Su cuenta ha sido eliminada por inactividad </a>
+            
+                            `,
+                            attachments: [] 
+                        });
+                        if(result.accepted.length !== 0) console.log('Mail Send');
+                    } else return res.status(400).json({message: 'No users to be eliminated'})
+                }
+            }; 
+            return res.status(200).json({message: 'Users deleted'})
 
         } catch (error) {
             return res.status(500).json({error})
         }
     }
-
-
 }
 
 export default new UserController();

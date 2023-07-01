@@ -31,7 +31,7 @@ class UserService {
         }
     }
 
-    async findAllSercie() {
+    async findAllService() {
         try {
             const allUsers = await this.dao.findAll();
             return allUsers;
@@ -55,6 +55,15 @@ class UserService {
             return response;
         } catch (error) {
             return error
+        }
+    }
+
+    async deleteOneService(id) {
+        try {
+            const response = await this.dao.deleteOne(id);
+            return response;
+        } catch (error) {
+            return error;
         }
     }
 }
