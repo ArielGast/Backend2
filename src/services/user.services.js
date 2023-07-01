@@ -29,7 +29,15 @@ class UserService {
         } catch (error) {
             return error;
         }
+    }
 
+    async findAllSercie() {
+        try {
+            const allUsers = await this.dao.findAll();
+            return allUsers;
+        } catch (error) {
+            return error;
+        }
     }
 
     async updateUser (obj) {

@@ -1,8 +1,9 @@
 import { Router } from "express";
 import userController from '../controllers/user.controller.js';
 import passport from "passport";
-import { authToken } from "../utils.js";
-import { uploader } from "../utils.js";
+import { authToken, uploader } from "../utils.js";
+import { AdminPermission } from "../middlewares/auth.middleware.js";
+
 
 const router = Router();
 
@@ -40,5 +41,8 @@ router.post('/:uid/documents',uploader.fields([
   ]),userController.documentsLoader);
 
 router.put('/premium/:uid', userController.userPremium);  
+router.get('/admin/users', AdminPermission, userController.getAllUsers);
+router.delete('/admin/deleteUsers' , AdminPermission, userController.deleteOldUsers);
+
 
 export default router;

@@ -3,6 +3,7 @@ import config from '../config.js';
 import { hashPassword, comparePasswords, generateToken } from '../utils.js';
 import logger from "../utils/winston.js";
 import nodemailer from 'nodemailer';
+import UserInfo from "../persistencia/DTOs/userInfo.dto.js";
 
 
 const ADMIN_EMAIL= config.admin_email;
@@ -236,6 +237,29 @@ class UserController  {
             return res.status(500).json({error})            
         }
     }
+
+    async getAllUsers (req,res) {
+        try {
+            const users = await userService.getAllUsers();
+            const usersDTO = users.map((user) => new UserInfo(user));
+            res.status(200).json({usersDTO});
+        } catch (error) {
+            return res.status(500).json({error})
+        }
+    }
+
+    async deleteOldUsers (req,res) {
+        try {
+            const actualDate = new Date();
+            const fechaActual = actualDate.toLocaleDateString();
+            const users = await userService.getAllUsers();
+            console.log(users);
+
+        } catch (error) {
+            return res.status(500).json({error})
+        }
+    }
+
 
 }
 
