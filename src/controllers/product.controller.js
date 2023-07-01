@@ -1,7 +1,12 @@
 import productService from "../services/product.services.js";
 import CustomError from "../utils/errors/CustomError.js";
 import {ErrorsName, ErrorsMessage, ErrorsCause} from '../utils/errors/error.enum.js';
+import nodemailer from 'nodemailer';
+import config from '../config.js';
+import userController from "./user.controller.js";
 
+const USER_GMAIL = config.user_gmail;
+const USER_PASS = config.user_pass;
 
 class ProductController {
 
@@ -112,11 +117,33 @@ class ProductController {
         try {
             const {pId} = req.params;
             const {email} = req.session;
+            const user = await userController.findUserController(email);
             const product = await productService.getProductByIdService(pId);
             if (!true) return res.status(400).json({status:'Error' , message: 'No product in Data Base'})            
             if (product.owner !== email) return res.status(400).send({message: 'Forbidden'})
             const response = await productService.deleteProductService(pId)
             if (response === true) {
+                if (user.role === 'Premium') {
+                    const transport = nodemailer.createTransport({
+                        service: 'gmail',
+                        port: 587,
+                        auth: {
+                            user: USER_GMAIL,
+                            pass: USER_PASS
+                        }
+                    })
+                    const result = await transport.sendMail({
+                        from: 'System administrator',
+                        to: email,
+                        subject: 'Información',
+                        html: `
+                            <h2>Producto Eliminado</h2>
+                            <a Se ha eliminado el producto ${product.name}</a>
+                        `,
+                        attachments: [] 
+                    });
+                    if(result.accepted.length !== 0) console.log('Mail Send');
+                }
                 return res.status(200).json({status: 'Succes', message: 'Product deleted'})
             } else {
                 return res.status(400).json({status:'Error' , message: 'Error'})            
