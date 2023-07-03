@@ -5,7 +5,7 @@ import logger from "../utils/winston.js";
 import nodemailer from 'nodemailer';
 import UserInfo from "../persistencia/DTOs/userInfo.dto.js";
 
-
+const PORT = config.port;
 const ADMIN_EMAIL= config.admin_email;
 const ADMIN_PASSWORD = config.admin_pass;
 const USER_GMAIL = config.user_gmail;
@@ -149,7 +149,7 @@ class UserController  {
             }
         })
         const token = generateToken(email)
-        const resetLink = `http://localhost:8080/users/changepass?token=${token}`
+        const resetLink = `http://localhost:${PORT}/users/changepass?token=${token}`
         try {
             const result = await transport.sendMail({
                 from: 'System administrator',
@@ -240,7 +240,6 @@ class UserController  {
 
     async getAllUsers (req,res) {
         try {
-            console.log('------------------------');
             const users = await userService.findAllService();
             const usersDTO = users.map((user) => new UserInfo(user));
             return res.status(200).json(usersDTO);
@@ -265,7 +264,7 @@ class UserController  {
                     }
                     if (daysOfLastConnection > 2) {
                         console.log('--------------');
-                        console.log(`User ${user.first_name} ${user.last_name} will be eliminated due inactivity`)
+                        console.log(`User ${user.first_name} ${user.last_name} will be eliminated due inactivity`); // dejo el log para realizar verificación
                         await userService.deleteOneService(user._id);
                         const transport = nodemailer.createTransport({
                             service: 'gmail',

@@ -6,7 +6,7 @@ import userController from '../controllers/user.controller.js';
 import { hashPassword } from '../utils.js';
 import config from '../config.js';
 
-
+const PORT = config.port;
 const GITHUB_CLIENTID= config.github_clientID;
 const GITHUB_CLIENT_SECRET= config.github_client_Secret;
 const GOOGLE_CLIENTID = config.google_clientID;
@@ -41,7 +41,7 @@ passport.use(
     new githubStrategy ({
         clientID: GITHUB_CLIENTID,
         clientSecret: GITHUB_CLIENT_SECRET,
-        callbackURL: 'http://localhost:8080/users/github'
+        callbackURL: `http://localhost:${PORT}/users/github`
     },
     async (accesToken, refreshToken, profile, done) => {
         const usuario = await userController.findUserController(profile._json.email)
@@ -68,7 +68,7 @@ passport.use('google',
 new googleStrategy({
     clientID: GOOGLE_CLIENTID,
     clientSecret: GOOGLE_CLIENT_SECRET,
-    callbackURL: "http://localhost:8080/users/google"
+    callbackURL: `http://localhost:${PORT}/users/google`
   }, async (accessToken, refreshToken, profile, done) => {
     const usuario = await userController.findUserController(profile._json.email)
         if(!usuario) {

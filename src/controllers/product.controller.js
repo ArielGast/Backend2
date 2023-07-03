@@ -7,6 +7,8 @@ import userController from "./user.controller.js";
 
 const USER_GMAIL = config.user_gmail;
 const USER_PASS = config.user_pass;
+const PORT = config.port;
+
 
 class ProductController {
 
@@ -29,8 +31,8 @@ class ProductController {
                 page: productos.page,
                 hasPrevPage: productos.hasPrevPage,
                 hasNextPage: productos.hasNextPage,
-                prevLink: productos.hasPrevPage != false ? (`localhost:8080/api/products?page=${parseInt(page)-1}`): null,
-                nextLink: productos.hasNextPage != false ? (`localhost:8080/api/products?page=${parseInt(page)+1}`): null
+                prevLink: productos.hasPrevPage != false ? (`localhost:${PORT}/api/products?page=${parseInt(page)-1}`): null,
+                nextLink: productos.hasNextPage != false ? (`localhost:${PORT}/api/products?page=${parseInt(page)+1}`): null
             }
             res.status(200).json({respuesta});
         } 

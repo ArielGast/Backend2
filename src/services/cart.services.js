@@ -71,8 +71,6 @@ class CartService {
                 } else {
                     const objUpdated = {idCart: idCarInt, products:[]};
                     await this.dao.updateOne(objUpdated);
-
-                    //await this.dao.updateOne({idCart: idCarInt},{$pull:{products: {idProduct: idP }}})
                     response = 'Succes';
                     return response
                 }       
